@@ -1,0 +1,33 @@
+# --- RAHASIA NEGARA (WAJIB) ---
+.env
+.env.local
+*.key
+*.pem
+
+# --- SAMPAH PYTHON ---
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+venv-emmy/
+.venv/
+env/
+
+# --- FILE GEDE / MODEL ---
+# GitHub Limit 100MB. Model ONNX & BIN kita ignore, suruh user download manual.
+models/*.bin
+models/*.onnx
+models/*.pt
+
+# --- DATABASE & MEMORI ---
+*.db
+*.sqlite3
+chroma/
+qdrant_storage/
+*.snapshot 
+# --- LOGS & MEDIA ---
+*.log
+*.wav
+*.mp3
+*.ogg
+vision_temp.jpg
