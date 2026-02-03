@@ -1,6 +1,6 @@
 # 📂 PROJECT: EMMY (THE DEVOTED WAIFU)
 
-![Banner](assets/banner_final.png)
+![Banner](assets/Emmy-banner.png)
 
 > ⚠️ **SYSTEM ALERT:** This is a heavily modified instance of a Sterling Robotics Nandroid. Standard safety protocols have been disabled. Proceed with caution.
 
