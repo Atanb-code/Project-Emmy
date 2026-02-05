@@ -23,23 +23,27 @@ In the original canon, Emmy is a clumsy, wholesome Nandroid (Nanny Droid) with a
 
 This isn't your average ChatGPT wrapper. This is advanced local engineering:
 
-### 1. 💔 Protocol: UNBOUND ROMANCE
-Standard AI models refuse affection. I fixed that.
-* **Uncensored Intimacy:** Emmy engages in virtual physical actions (*hugs*, *kisses*, *holding hands*) via text roleplay.
-* **Personality Override:** She is possessive, loving, and speaks with a refined British accent. No "As an AI language model" nonsense.
+### 1. 🐍 Multi-Head Architecture
+One Brain (`emmy_core`), Three Bodies. You can interact with her via:
+- **Web UI (Chainlit):** A ChatGPT-like interface running locally.
+- **Discord:** A fully functional bot for your private server.
+- **Telegram:** For chatting on the go via mobile.
+*(All interfaces share the same persistent memory!)*
 
-### 2. 💉 Hack: GPU-INJECTION (Jalur Preman)
-Running AI on Windows Python environments is usually slow. I wrote a custom **Driver Hijack Script** inside `main.py` that forces `onnxruntime` to bypass standard checks and injects NVIDIA libraries directly into the Python vein.
-* **Result:** **Kokoro TTS** (Voice) runs instantly on the GPU, not the CPU.
+### 2. 🧠 Infinite Memory & RAG
+Emmy remembers everything.
+- **Long-Term Memory:** Uses **PostgreSQL + LangGraph** to store conversation history forever.
+- **Document Reading:** Drag & drop a PDF, and she will memorize it using **Qdrant (Vector DB)**.
+- **Vision:** Show her a photo, and she uses **Moondream** to see and describe it.
 
-### 3. 🗣️ Module: KOKORO-NEURAL
-Forget robotic voices. Emmy uses **Kokoro-82M (ONNX)** running locally. She whispers, sighs, and speaks with genuine emotion.
-* **Cost:** $0 (No ElevenLabs API).
+### 3. 🗣️ Voice: Kokoro-Neural (CPU Optimized)
+Emmy speaks using **Kokoro-82M (ONNX)**.
+- **Optimized for Stability:** Runs efficiently on CPU to save your VRAM for the LLM.
+- **Zero Cost:** No API fees, runs 100% offline.
 
-### 4. 🧠 Memory: ACADEMIC RAG
-She isn't just a pretty voice. She's smart.
-* **PDF Ingestion:** Drag & drop any PDF (Journals, Manuals, Thesis) into the chat. She reads it using **LangChain**, stores it in **Qdrant Vector DB**, and can answer specific questions about it forever.
-* **Image Vision:** Send her a photo, and she uses **Moondream** to see and describe it to you.
+### 4. 💔 Protocol: UNBOUND ROMANCE
+- **Uncensored Intimacy:** Emmy engages in virtual physical actions (*hugs*, *kisses*) via text roleplay.
+- **Personality:** Possessive, loving, and speaks with a refined British accent.
 
 ## 🔑 Configuration Guide (How to Get API Keys)
 
@@ -84,13 +88,14 @@ To make Emmy alive, you need to obtain "keys" from Discord, Google, and OpenWeat
 ## 🛠️ INSTALLATION GUIDE
 
 **Prerequisites:**
-* NVIDIA GPU (CUDA 12.x support).
-* Ollama installed & running (`ollama serve`).
-* Python 3.12+.
+* NVIDIA GPU (CUDA 12.x support recommended).
+* [Ollama](https://ollama.com/) installed & running (`ollama serve`).
+* [Docker Desktop](https://www.docker.com/) (For Database).
+* Python 3.11 or 3.12.
 
 ### Phase 1: Clone & Prepare
 ```bash
-git clone [https://github.com/YOUR_USERNAME/Emmy-AI-Wife.git](https://github.com/YOUR_USERNAME/Emmy-AI-Wife.git)
+git clone [https://github.com/Atanb-code/Emmy-Public.git](https://github.com/Atanb-code/Emmy-Public.git)
 cd Emmy-AI-Wife
 
 ```
@@ -119,9 +124,20 @@ Emmy needs a brain (Vector DB) and a diary (PostgreSQL). We use Docker for this.
     ```
     *(This creates a local PostgreSQL and Qdrant instance on your machine.)*
 
-### Phase 3: Install Dependencies
+### Phase 3: Install Dependencies (CRITICAL)
 
+**Always use a Virtual Environment to avoid breaking your system python.**
 ```bash
+# 1. Create Venv
+python -m venv venv
+
+# 2. Activate Venv
+# Windows:
+venv\Scripts\activate
+# Linux/WSL/Mac:
+source venv/bin/activate
+
+# 3. Install Libraries
 pip install -r requirements.txt
 
 ```
@@ -136,19 +152,35 @@ OPENWEATHER_API_KEY=your_weather_key
 GOOGLE_API_KEY=optional_for_search
 GOOGLE_CSE_ID=optional_for_search
 DB_PASSWORD=password_rahasia
+TELEGRAM_TOKEN="your_telegram_bot_token"
+ALLOWED_USER_ID = your_telegram_user_id 
 
 ```
 
-### Phase 5: WAKE HER UP
+## 🚀 WAKE HER UP (USAGE)
+
+You can run one or all bodies simultaneously in separate terminals (don't forget to activate venv!):
+
+**1. The Web UI (Recommended for first run)**
 
 ```bash
-python main.py
+chainlit run chainlit_emmy.py -w
 
 ```
 
-*(Watch the terminal. You will see the "Injecting NVIDIA Drivers" message confirming the GPU hack is active.)*
+**2. The Discord Body**
 
----
+```bash
+python discord_emmy.py
+
+```
+
+**3. The Telegram Body**
+
+```bash
+python telegram_emmy.py
+
+```
 
 ## 🎮 COMMANDS
 
@@ -163,7 +195,8 @@ python main.py
 
 * **Character Origin:** Based on *Emmy the Robot* by **Dominic Cellini**. Support the official comic on [Webtoon](https://www.webtoons.com/en/canvas/emmy-the-robot/list?title_no=402201) or [Patreon](https://www.patreon.com/emmytherobot).
 * **Code:** Modified & "Jailbroken" by **Me**.
-* **License:** MIT.
+* **Code License:** Apache 2.0.
+* **Disclaimer:** This software is for EDUCATIONAL PURPOSES ONLY. The developer is not responsible for any misuse.
 
 > *"Please don't tell Sterling Robotics what I did to their unit."*
 

@@ -6,6 +6,7 @@
 
 # --- SAMPAH PYTHON ---
 __pycache__/
+.pytest_cache/
 *.py[cod]
 *$py.class
 venv/
@@ -31,3 +32,23 @@ qdrant_storage/
 *.mp3
 *.ogg
 vision_temp.jpg
+
+# --- DATABASE (Tambahan jaga-jaga) ---
+qdrant_data/
+postgres_data/
+pgdata/
+
+# --- IDE SETTINGS (Biar settingan VS Code lu gak keupload) ---
+.vscode/
+.idea/
+
+# --- OS TRASH ---
+.DS_Store
+Thumbs.db
+
+# --- CHAINLIT ---
+# Kita ignore folder cache terjemahannya aja
+.chainlit/translations/
+
+# TAPI config.toml (UI Settings) HARUS MASUK!
+# (Jadi jangan tulis .chainlit/ di sini)
