@@ -13,7 +13,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     
     # Bikin ID beda biar gak nyampur sama chat Discord
-    thread_id = f"telegram_{user_id}_v6"
+    thread_id = f"telegram_{user_id}_emmy_local"
     config = {"configurable": {"thread_id": thread_id}}
 
     await update.message.reply_text("⏳ *Typing...*", parse_mode="Markdown")
