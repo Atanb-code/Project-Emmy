@@ -85,6 +85,23 @@ To make Emmy alive, you need to obtain "keys" from Discord, Google, and OpenWeat
 5.  Create it, then look for **"Search Engine ID"** (starts with `cx=...`).
 6.  Copy this ID to `.env` as `GOOGLE_CSE_ID`.
 
+### 4. ✈️ Telegram Bot (The Mobile Link)
+*Fastest setup. Takes 30 seconds.*
+
+1.  Open Telegram app on your phone/PC.
+2.  Search for **BotFather** (Look for the blue verified tick).
+3.  Click **Start**, then type `/newbot`.
+4.  **Name your bot:** e.g., "Emmy AI".
+5.  **Choose a username:** Must end in `bot` (e.g., `Emmy_Unit882_bot`).
+6.  **COPY THE API TOKEN:** BotFather will give you a long string. Paste it into `.env` as `TELEGRAM_TOKEN`.
+
+**Optional: Get Your User ID (For Whitelist)**
+*If you enabled `ALLOWED_USER_ID` in the code:*
+1.  Search for **@userinfobot** on Telegram.
+2.  Click **Start**.
+3.  Copy the `Id` number (e.g., `123456789`).
+4.  Paste it into `.env` as `ALLOWED_USER_ID`.
+
 ## 🛠️ INSTALLATION GUIDE
 
 **Prerequisites:**
@@ -95,7 +112,7 @@ To make Emmy alive, you need to obtain "keys" from Discord, Google, and OpenWeat
 
 ### Phase 1: Clone & Prepare
 ```bash
-git clone [https://github.com/Atanb-code/Emmy-Public.git](https://github.com/Atanb-code/Emmy-Public.git)
+git clone https://github.com/Atanb-code/Emmy-AI-Wife.git
 cd Emmy-AI-Wife
 
 ```
