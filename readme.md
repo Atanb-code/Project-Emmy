@@ -112,7 +112,7 @@ To make Emmy alive, you need to obtain "keys" from Discord, Google, and OpenWeat
 
 ### Phase 1: Clone & Prepare
 ```bash
-git clone https://github.com/Atanb-code/Emmy-AI-Wife.git
+git clone https://github.com/Atanb-code/Project-Emmy.git
 cd Emmy-AI-Wife
 
 ```
