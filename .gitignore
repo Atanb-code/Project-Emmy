@@ -50,5 +50,8 @@ Thumbs.db
 # Kita ignore folder cache terjemahannya aja
 .chainlit/translations/
 
+# --- zat lain-lain ---
+.pyZone.Identifier
+
 # TAPI config.toml (UI Settings) HARUS MASUK!
 # (Jadi jangan tulis .chainlit/ di sini)
