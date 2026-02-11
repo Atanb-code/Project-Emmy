@@ -32,7 +32,7 @@ from langgraph.checkpoint.postgres import PostgresSaver
 from psycopg_pool import ConnectionPool
 
 IP_WINDOWS_LU = "127.0.0.1" 
-MODEL_OPREKAN_LU = "llama3.2:latest"
+MODEL_OPREKAN_LU = "hermes3:latest"
 
 # 1. Load Environment
 load_dotenv()
@@ -59,6 +59,31 @@ except Exception as e:
     print(f"❌ Error Load Kokoro: {e}")
     kokoro = None
 
+# --- TAMBAHAN DI emmy_core.py ---
+
+def generate_voice_audio(text: str):
+    """Fungsi buat generate audio dari teks pake Kokoro (CPU)."""
+    if not kokoro:
+        print("❌ Kokoro belum dimuat!")
+        return None
+    
+    try:
+        print(f"🎤 Generating Audio: {text[:30]}...")
+        # Generate audio (Blocking process, makanya ntar di-async di Discord)
+        samples, sample_rate = kokoro.create(
+            text, 
+            voice=EMMY_VOICE_STYLE, 
+            speed=1.0, 
+            lang="en-gb" # Aksen British cuy
+        )
+        
+        # Simpan ke file temp
+        filename = f"voice_{uuid.uuid4()}.wav"
+        sf.write(filename, samples, sample_rate)
+        return filename
+    except Exception as e:
+        print(f"❌ Gagal generate suara: {e}")
+        return None
 
 # Setup DB & LLM tetap sama
 DB_PASSWORD = os.getenv("DB_PASSWORD", "password_rahasia")
@@ -89,26 +114,41 @@ def google_search(query: str) -> str:
 def get_weather_forecast(city: str) -> str:
     """MANDATORY: Check weather for TODAY and FORECAST for the next 5 days."""
     api_key = os.getenv("OPENWEATHER_API_KEY")
-    url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units=metric&lang=id"
+    url = f"http://api.openweathermap.org/data/2.5/forecast?q={city}&appid={api_key}&units=metric&lang=en"
     
     try:
         response = requests.get(url)
         data = response.json()
         if response.status_code == 200:
-            # PENTING: Gunakan data['list'][0] untuk API Forecast
-            current = data['list'][0] 
-            kondisi = current['weather'][0]['description']
-            suhu = current['main']['temp']
-            kelembapan = current['main']['humidity']
-            wind_speed = current['wind']['speed']
+           # 1. Ambil Cuaca Sekarang
+            current = data['list'][0]
             
-            return (f"Laporan Cuaca di {city}:\n"
-                    f"- Kondisi: {kondisi}\n"
-                    f"- Suhu: {suhu}°C\n"
-                    f"- Kelembapan: {kelembapan}%\n"
-                    f"- Angin: {wind_speed} m/s")
+            # 2. Cek 24 Jam ke depan (8 slot data x 3 jam)
+            next_24h = data['list'][:8]
+            will_rain = False
+            rain_time = ""
+            
+            for item in next_24h:
+                condition = item['weather'][0]['main'].lower()
+                if 'rain' in condition or 'storm' in condition:
+                    will_rain = True
+                    rain_time = item['dt_txt'].split(" ")[1][:5] # Ambil jamnya doang
+                    break # Ketemu hujan langsung lapor
+            
+            # 3. Susun Laporan
+            report = (f"Weather Report for {city}:\n"
+                      f"- Current Status: {current['weather'][0]['description'].capitalize()}\n"
+                      f"- Temperature: {current['main']['temp']}°C\n"
+                      f"- Humidity: {current['main']['humidity']}%\n")
+            
+            if will_rain:
+                report += f"\n⚠️ WARNING: Rain is expected around {rain_time}. Prepare an umbrella!"
+            else:
+                report += "\n✅ Forecast: No rain expected in the next 24 hours."
+                
+            return report
         else:
-            return f"Gagal: {data.get('message')}"
+            return f"Failed: {data.get('message')}"
     except Exception as e:
         return f"Error: Struktur data API berubah atau {e}"
 

@@ -4,7 +4,7 @@ import asyncio
 import uuid
 import ollama # <-- BUTUH INI BUAT VISION
 from dotenv import load_dotenv
-from emmy_core import get_emmy_brain, qdrant_store # <-- IMPORT STORE JUGA DARI CORE
+from emmy_core import get_emmy_brain, qdrant_store, generate_voice_audio # <--- TAMBAH INI
 # Kalau qdrant_store error, pastiin di emmy_core.py variable-nya ga di dalem fungsi
 
 from langchain_community.document_loaders import PyPDFLoader
@@ -67,7 +67,7 @@ async def on_message(message):
                     print(f"Vision error: {e}")
                 finally: 
                     if os.path.exists(filename): os.remove(filename)
-
+            
             # B. HANDLE PDF (RAG)
             elif attachment.content_type == 'application/pdf':
                 await message.channel.send("📚 Reading document... Give me a moment, Darling.")
@@ -94,6 +94,9 @@ async def on_message(message):
                     await message.channel.send(f"❌ Failed to read PDF: {e}")
                 finally:
                     if os.path.exists(filename): os.remove(filename)
+            
+            # C. HANDLE AUDIO (VOICE RESPONSE)
+            
 
     # Gabung Context
     final_prompt = user_input + system_addon
@@ -103,7 +106,7 @@ async def on_message(message):
     try:
         async with message.channel.typing():
             # Thread ID Unik buat Discord
-            thread_id = f"discord_{message.author.id}_emmy_local"
+            thread_id = f"discord_{message.author.id}_v6_my_bini_hdv"
             config = {"configurable": {"thread_id": thread_id}}
             
             # Panggil Otak
@@ -120,15 +123,36 @@ async def on_message(message):
                 print("⚠️ JSON LEAK DETECTED")
                 bot_reply = "*smiles* I tried to calculate something but got confused. Let's just say I love you!"
 
-            # Kirim Balasan (Chunking kalau kepanjangan)
+            # --- BAGIAN BARU: KIRIM SUARA ---
             if bot_reply:
+                # 1. Kirim Teks Dulu (Biar user bisa baca kalau males denger)
                 if len(bot_reply) > 2000:
                     chunks = [bot_reply[i:i+1900] for i in range(0, len(bot_reply), 1900)]
                     for chunk in chunks:
                         await message.channel.send(chunk)
-                        await asyncio.sleep(0.5) 
                 else:
                     await message.channel.send(bot_reply)
+                
+                # 2. Generate & Kirim Audio (VN)
+                # Kita limit biar ga generate novel (misal max 500 karakter buat suara)
+                text_to_speak = bot_reply[:500] 
+                
+                # Jalanin di thread terpisah biar bot ga nge-freeze pas mikir suara
+                audio_file = await asyncio.to_thread(generate_voice_audio, text_to_speak)
+                
+                if audio_file:
+                    try:
+                        # Kirim sebagai Voice Note
+                        await message.channel.send(
+                            file=discord.File(audio_file),
+                            reference=message # Reply ke user
+                        )
+                    except Exception as e:
+                        print(f"Gagal upload audio: {e}")
+                    finally:
+                        # Hapus file sampah
+                        if os.path.exists(audio_file):
+                            os.remove(audio_file)
 
     except Exception as e:
         print(f"❌ Agent Error: {e}")
